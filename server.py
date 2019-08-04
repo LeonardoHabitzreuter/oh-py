@@ -9,5 +9,7 @@ usersService = UsersService()
 def users():
   if request.method == 'GET':
     return jsonify(usersService.get())
+  if request.method == 'POST':
+    return jsonify(usersService.create(request.get_json()))
   else:
     return ''
