@@ -1,16 +1,16 @@
-# -*- coding: utf-8 -*-
 from playhouse.shortcuts import model_to_dict
-from ..database.models import User
+from src.database.models import User
+from .response import Response
 
 class UsersService:
   def get(self):
-    return list(map(model_to_dict, User.select()))
+    users = list(map(model_to_dict, User.select()))
+    return Response(data=users)
 
   def create(self, request):
     User.create(name=request.get("name"), age=request.get("age"))
-    User(name=request.get("name"), age=request.get("age")).save()
-    return 'created'
+    return Response()
 
   def delete(self, id):
     deleted = User.delete().where(User.id == id).execute()
-    return "deleted" if deleted > 0 else "id not found", 404
+    return Response() if deleted > 0 else Response(data="id not found", status=404)
