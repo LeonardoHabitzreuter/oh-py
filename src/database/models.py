@@ -3,19 +3,25 @@ from peewee import *
 
 db = SqliteDatabase('people.db')
 
-class User(Model):
-  name = CharField()
-  age = IntegerField()
-
+class BaseModel(Model):
   class Meta:
     database = db
 
-  def __str__(self):
-    return self.name
+class User(BaseModel):
+  name = CharField()
+  age = IntegerField()
+
+class Product(BaseModel):
+  name = CharField()
+  price = FloatField()
+
+class Order(BaseModel):
+  user = ForeignKeyField(User, backref='orders')
+  product = ForeignKeyField(Product, backref='orders')
 
 def connect():
   db.connect()
 
 def createTables():
   with db:
-    db.create_tables([User])
+    db.create_tables([User, Product, Order])
