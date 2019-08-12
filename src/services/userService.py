@@ -7,10 +7,15 @@ class UsersService:
     users = list(map(model_to_dict, User.select()))
     return Response(data=users)
 
-  def create(self, request):
-    User.create(name=request.get("name"), age=request.get("age"))
+  def create(self, user):
+    User.create(name=user.get("name"), age=user.get("age"))
     return Response()
 
   def delete(self, id):
     deleted = User.delete().where(User.id == id).execute()
     return Response() if deleted > 0 else Response(data="id not found", status=404)
+  
+  def update(self, id, user):
+    query = User.update(user).where(User.id == id)
+    updated = query.execute()
+    return Response() if updated > 0 else Response(data="id not found", status=404)

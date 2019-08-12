@@ -11,14 +11,13 @@ createTables()
 def before_request():
   connect()
 
-@app.route('/users', methods=['GET', 'POST', 'PUT'])
+@app.route('/users', methods=['GET', 'POST'])
 def users():
-  if request.method == 'GET':
-    return usersService.get().toJson()
-  if request.method == 'POST':
-    return usersService.create(request.get_json()).toJson()
-  else:
-    return ''
+  return usersService.get().toJson() if request.method == 'GET' else usersService.create(request.get_json()).toJson()
+
+@app.route('/users/<int:userId>', methods=['PUT'])
+def updateUser(userId):
+  return usersService.update(userId, request.get_json()).toJson()
 
 @app.route('/users/<int:userId>', methods=['DELETE'])
 def deleteUser(userId):
